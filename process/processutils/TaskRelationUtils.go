@@ -1,6 +1,9 @@
 package processutils
 
-import "github.com/PaienNate/dolphinscheduler-sdk-go/process"
+import (
+	"errors"
+	"github.com/PaienNate/dolphinscheduler-sdk-go/process"
+)
 
 // OneLineRelation 该方法用于构建单行任务关系，例如 t1->t2->t3->t4......
 func OneLineRelation(taskCodes ...int64) []process.TaskRelation {
@@ -16,6 +19,26 @@ func OneLineRelation(taskCodes ...int64) []process.TaskRelation {
 		}
 	}
 	return list
+}
+
+// GetJustARelation 只获取两个taskCodes的联系。返回一个TaskRelation对象。
+// 其主要用于DAG中按顺序获取的情况
+func GetJustARelation(taskCodes ...int64) (error, *process.TaskRelation) {
+	if len(taskCodes) != 2 {
+		return errors.New("获取单个TaskRelation的参数有误"), nil
+	}
+	var node *process.TaskRelation
+	for i, taskCode := range taskCodes {
+		// 跳过第一个node参数，直接处理第二个
+		if i == 0 {
+			continue
+		}
+		node = &process.TaskRelation{
+			PreTaskCode:  taskCodes[i-1],
+			PostTaskCode: taskCode,
+		}
+	}
+	return nil, node
 }
 
 // 该方法是GPT说用于构建多行任务关系，例如(1,2,3)->(4,5)->(6,7)
