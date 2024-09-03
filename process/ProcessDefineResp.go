@@ -1,7 +1,7 @@
 package process
 
 import (
-	"time"
+	"github.com/PaienNate/dolphinscheduler-sdk-go/util"
 )
 
 // Parameter 任务参数或全局参数
@@ -24,8 +24,8 @@ type ProcessDefineResp struct {
 	GlobalParams         string            `json:"globalParams"`         // user defined parameters
 	GlobalParamList      []Parameter       `json:"globalParamList"`      // user defined parameter list
 	GlobalParamMap       map[string]string `json:"globalParamMap"`       // user define parameter map
-	CreateTime           time.Time         `json:"createTime"`           // create time
-	UpdateTime           time.Time         `json:"updateTime"`           // update time
+	CreateTime           util.Time         `json:"createTime"`           // create time
+	UpdateTime           util.Time         `json:"updateTime"`           // update time
 	Flag                 string            `json:"flag"`                 // process is valid: yes/no
 	UserID               int               `json:"userId"`               // process user id
 	UserName             string            `json:"userName"`             // user name

@@ -41,23 +41,22 @@ func (p *ProcessInstanceOperator) Start(projectCode int64, processInstanceCreate
 }
 
 // Page 分页查询工作流实例列表
-func (p *ProcessInstanceOperator) Page(page, size *int, projectCode, workflowCode int64) ([]instance.ProcessInstanceQueryResp, error) {
+func (p *ProcessInstanceOperator) Page(page, size int, projectCode, workflowCode int64) ([]instance.ProcessInstanceQueryResp, error) {
 	url := fmt.Sprintf("%s/projects/%d/process-instances", p.DolphinAddress, projectCode)
 	// TODO：抽离通用Page方法
 	// 如果page和size为空，那么默认page为1，默认size为10
 	defaultPage := 1
 	defaultSize := 10
-
-	if page == nil {
-		page = &defaultPage
+	if page == 0 {
+		page = defaultPage
 	}
-	if size == nil {
-		size = &defaultSize
+	if size == 0 {
+		size = defaultSize
 	}
 	// 发送Query map[string][string]添加数据
 	query := make(map[string]string)
-	query["pageNo"] = strconv.Itoa(*page)
-	query["pageSize"] = strconv.Itoa(*size)
+	query["pageNo"] = strconv.Itoa(page)
+	query["pageSize"] = strconv.Itoa(size)
 	// 转换为十进制字符串
 	query["processDefineCode"] = strconv.FormatInt(workflowCode, 10)
 	// 请求并获取返回值
@@ -110,7 +109,7 @@ func (p *ProcessInstanceOperator) Execute(projectCode, processInstanceId int64, 
 	if result.Success {
 		return true, nil
 	}
-	return false, errors.New("Execute执行错误")
+	return false, errors.New("execute执行错误")
 }
 
 // Delete 删除工作流实例
@@ -123,5 +122,5 @@ func (p *ProcessInstanceOperator) Delete(projectCode, processInstanceId int64) (
 	if result.Success {
 		return true, nil
 	}
-	return false, errors.New("Delete执行错误")
+	return false, errors.New("delete执行错误")
 }

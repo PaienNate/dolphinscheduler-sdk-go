@@ -109,7 +109,7 @@ func (p *ProcessOperator) Create(projectCode int64, processDefineParam *process.
 // @return 更新响应
 func (p *ProcessOperator) Update(projectCode int64, processDefineParam *process.ProcessDefineParam, processCode int64) (*process.ProcessDefineResp, error) {
 	// 定义URL
-	url := fmt.Sprintf("%s/projects/%d/process-definition/%s", p.DolphinAddress, projectCode, processCode)
+	url := fmt.Sprintf("%s/projects/%d/process-definition/%d", p.DolphinAddress, projectCode, processCode)
 	// 执行代码
 	// TODO:指定结构体FORM字段
 	result, err := p.DolphinsRestClient.PutForm(url, util.ToFormValues(processDefineParam))
@@ -134,7 +134,7 @@ func (p *ProcessOperator) Update(projectCode int64, processDefineParam *process.
 // @return 成功则返回true，否则返回false
 func (p *ProcessOperator) Delete(projectCode int64, processCode int64) (bool, error) {
 	// 实现代码
-	url := fmt.Sprintf("%s/projects/%d/process-definition/%s", p.DolphinAddress, projectCode, processCode)
+	url := fmt.Sprintf("%s/projects/%d/process-definition/%d", p.DolphinAddress, projectCode, processCode)
 	result, err := p.DolphinsRestClient.Delete(url, nil)
 	// 返回是否成功
 	if result.Success {
@@ -152,7 +152,7 @@ func (p *ProcessOperator) Delete(projectCode int64, processCode int64) (bool, er
 // @return 成功则返回true，否则返回false
 func (p *ProcessOperator) Release(projectCode int64, code int64, processReleaseParam *process.ProcessReleaseParam) (bool, error) {
 	// 实现代码
-	url := fmt.Sprintf("%s/projects/%d/process-definition/%s/release", p.DolphinAddress, projectCode, code)
+	url := fmt.Sprintf("%s/projects/%d/process-definition/%d/release", p.DolphinAddress, projectCode, code)
 	result, err := p.DolphinsRestClient.PostForm(url, util.ToFormValues(processReleaseParam))
 	if result.Success {
 		return true, nil
@@ -166,7 +166,11 @@ func (p *ProcessOperator) Release(projectCode int64, code int64, processReleaseP
 // @param code 流程ID
 // @return 成功则返回true，否则返回false
 func (p *ProcessOperator) Online(projectCode int64, code int64) (bool, error) {
-	return p.Release(projectCode, code, nil)
+	// 这里不能是nil，必须是ONLINE
+
+	return p.Release(projectCode, code, &process.ProcessReleaseParam{
+		ReleaseState: "ONLINE",
+	})
 }
 
 // Offline 下线流程定义，替代 Release 方法
@@ -175,7 +179,9 @@ func (p *ProcessOperator) Online(projectCode int64, code int64) (bool, error) {
 // @param code 流程ID
 // @return 成功则返回true，否则返回false
 func (p *ProcessOperator) Offline(projectCode int64, code int64) (bool, error) {
-	return p.Release(projectCode, code, nil)
+	return p.Release(projectCode, code, &process.ProcessReleaseParam{
+		ReleaseState: "OFFLINE",
+	})
 }
 
 // GenerateTaskCode 生成任务唯一标识代码

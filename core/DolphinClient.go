@@ -13,9 +13,9 @@ type DolphinClient struct {
 
 	//dataSourceOperator      *datasource.DataSourceOperator
 	//resourceOperator        *resource.ResourceOperator
-	processOperator *operator.ProcessOperator
-	//processInstanceOperator *instance.ProcessInstanceOperator
-	//scheduleOperator        *schedule.ScheduleOperator
+	processOperator         *operator.ProcessOperator
+	processInstanceOperator *operator.ProcessInstanceOperator
+	scheduleOperator        *operator.ScheduleOperator
 	//projectOperator         *project.ProjectOperator
 	//tenantOperator          *tenant.TenantOperator
 }
@@ -37,8 +37,8 @@ func (c *DolphinClient) initOperators() {
 	//c.resourceOperator = resource.NewResourceOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
 	// 工作流
 	c.processOperator = operator.NewProcessOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
-	//c.processInstanceOperator = instance.NewProcessInstanceOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
-	//c.scheduleOperator = schedule.NewScheduleOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
+	c.processInstanceOperator = operator.NewProcessInstanceOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
+	c.scheduleOperator = operator.NewScheduleOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
 	//c.projectOperator = project.NewProjectOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
 	//c.tenantOperator = tenant.NewTenantOperator(c.dolphinAddress, c.token, c.dolphinsRestTemplate)
 }
@@ -55,13 +55,13 @@ func (c *DolphinClient) OpsForProcess() *operator.ProcessOperator {
 	return c.processOperator
 }
 
-//func (c *DolphinClient) OpsForProcessInst() *instance.ProcessInstanceOperator {
-//	return c.processInstanceOperator
-//}
-//
-//func (c *DolphinClient) OpsForSchedule() *schedule.ScheduleOperator {
-//	return c.scheduleOperator
-//}
+func (c *DolphinClient) OpsForProcessInst() *operator.ProcessInstanceOperator {
+	return c.processInstanceOperator
+}
+func (c *DolphinClient) OpsForSchedule() *operator.ScheduleOperator {
+	return c.scheduleOperator
+}
+
 //
 //func (c *DolphinClient) OpsForProject() *project.ProjectOperator {
 //	return c.projectOperator
