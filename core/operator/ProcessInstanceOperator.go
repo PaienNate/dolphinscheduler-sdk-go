@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/PaienNate/dolphinscheduler-sdk-go/common"
 	"github.com/PaienNate/dolphinscheduler-sdk-go/instance"
 	"github.com/PaienNate/dolphinscheduler-sdk-go/remote"
 	"github.com/PaienNate/dolphinscheduler-sdk-go/util"
@@ -64,15 +65,17 @@ func (p *ProcessInstanceOperator) Page(page, size int, projectCode, workflowCode
 	if err != nil {
 		return nil, err
 	}
-	var processInstanceQueryResp []instance.ProcessInstanceQueryResp
+	var pageInfo common.PageInfo[instance.ProcessInstanceQueryResp]
+	//var processInstanceQueryResp []instance.ProcessInstanceQueryResp
 	if result.Success {
 		// 获取并转换为对应的[]ProcessDefineResp
 		data := result.Data
-		err = json.Unmarshal(data, &processInstanceQueryResp)
+		// 此处还不能直接转换，因为它还套了一层totalList。
+		err = json.Unmarshal(data, &pageInfo)
 		if err != nil {
 			return nil, err
 		}
-		return processInstanceQueryResp, nil
+		return pageInfo.TotalList, nil
 	}
 
 	return nil, errors.New("page获取失败")

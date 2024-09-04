@@ -46,8 +46,16 @@ func ToFormValues(req interface{}) map[string]string {
 			values[formKey] = strconv.Itoa(int(field.Int()))
 		case reflect.Bool:
 			values[formKey] = strconv.FormatBool(field.Bool())
-		case reflect.Slice:
-			// 将结构体字段序列化为 JSON 字符串
+		case reflect.Slice, reflect.Array:
+			// 将Slice或Array字段序列化为JSON字符串
+			jsonData, err := json.Marshal(field.Interface())
+			if err != nil {
+				values[formKey] = "" // 处理错误的情况下可以设为空字符串
+			} else {
+				values[formKey] = string(jsonData)
+			}
+		case reflect.Struct:
+			// 将Struct字段序列化为JSON字符串
 			jsonData, err := json.Marshal(field.Interface())
 			if err != nil {
 				values[formKey] = "" // 处理错误的情况下可以设为空字符串
@@ -55,6 +63,7 @@ func ToFormValues(req interface{}) map[string]string {
 				values[formKey] = string(jsonData)
 			}
 		default:
+			fmt.Println(field.Kind())
 			values[formKey] = fmt.Sprint(field.Interface()) // 处理其他类型
 		}
 	}

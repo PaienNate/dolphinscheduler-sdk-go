@@ -20,7 +20,13 @@ func (t Time) MarshalJSON() ([]byte, error) {
 }
 
 func (t *Time) UnmarshalJSON(data []byte) (err error) {
-	now, err := time.ParseInLocation(`"`+timeFormat+`"`, string(data), time.Local)
+	// TODO：找到更好的方案解决这个问题
+	strData := string(data)
+	if strData == "null" || strData == `""` || strData == "" {
+		*t = Time(time.Time{}) // 设置为零值或你想要的默认值
+		return nil
+	}
+	now, err := time.ParseInLocation(`"`+timeFormat+`"`, strData, time.Local)
 	*t = Time(now)
 	return
 }

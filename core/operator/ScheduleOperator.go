@@ -89,7 +89,7 @@ func (p *ScheduleOperator) Online(projectCode, scheduleId int64) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	var scheduleInfoResp schedule.ScheduleInfoResp
+	var scheduleInfoResp bool
 	if result.Success {
 		// 获取并转换为对应的ProcessDefineResp
 		data := result.Data
@@ -109,7 +109,7 @@ func (p *ScheduleOperator) Offline(projectCode, scheduleId int64) (bool, error) 
 	if err != nil {
 		return false, err
 	}
-	var scheduleInfoResp schedule.ScheduleInfoResp
+	var scheduleInfoResp bool
 	if result.Success {
 		// 获取并转换为对应的ProcessDefineResp
 		data := result.Data
@@ -126,7 +126,7 @@ func (p *ScheduleOperator) Offline(projectCode, scheduleId int64) (bool, error) 
 func (p *ScheduleOperator) Delete(projectCode, scheduleId int64) (bool, error) {
 	url := fmt.Sprintf("%s/projects/%d/schedules/%d", p.DolphinAddress, projectCode, scheduleId)
 	result, err := p.DolphinsRestClient.Delete(url, nil)
-	var scheduleInfoResp schedule.ScheduleInfoResp
+	var scheduleInfoResp bool
 	if result.Success {
 		// 获取并转换为对应的ProcessDefineResp
 		data := result.Data
