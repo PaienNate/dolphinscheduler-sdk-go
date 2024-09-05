@@ -15,7 +15,7 @@ type Schedule struct {
 	StartTime  string `json:"startTime,omitempty" form:"startTime"`
 	EndTime    string `json:"endTime,omitempty" form:"endTime"`
 	Crontab    string `json:"crontab,omitempty" form:"crontab"`
-	TimezoneId string `json:"timezoneId,omitempty" form:"timezoneId"`
+	TimezoneId string `json:"timezoneId'" form:"timezoneId"`
 }
 
 // NewScheduleDefineParam creates a new instance of ScheduleDefineParam with default values
